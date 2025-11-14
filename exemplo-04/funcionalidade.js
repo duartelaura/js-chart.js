@@ -56,7 +56,7 @@ function apresentarGrafico(dados) {
     const contexto = document.getElementById('grafico');
 
     // Cria o objeto do gráfico passando os parâmetros
-    const divBarChart = new Chart(contexto, {
+    const grafico = new Chart(contexto, {
         type: 'bar',
         data: {
             labels: meses,
