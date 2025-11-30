@@ -40,15 +40,15 @@ Sistema web para gerenciamento de coleção de filmes com funcionalidades de CRU
 ## PRINTS
 
 ### 1. CRUD - Gerenciamento de Filmes (exibição e formulário)
-![CRUD Functionality](assets/print1.jpg)
+![CRUD Functionality](assets/print1.png)
 *Interface de gerenciamento de filmes com formulário de adição*
 
 ### 2. Gráficos - Análise Estatística (gráficos)
-![Charts Functionality](assets/print2.jpg)
+![Charts Functionality](assets/print2.png)
 *Gráficos de pizza, barras e linha com dados dos filmes*
 
 ### 3. Mapa - Visualização Geográfica (mapa)
-![Map Functionality](assets/print3.jpg)
+![Map Functionality](assets/print3.png)
 *Mapa interativo com marcadores dos locais de filmagem*
 
 ## OS ARQUIVOS ESTÃO DA PASTA PUBLIC, OS PRINTS ESTÃO NA PASTA ASSETS
