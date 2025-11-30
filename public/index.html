@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineCollection - Biblioteca de Filmes</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #mapa {
+            height: 500px;
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid #404040;
+        }
+        .leaflet-container {
+            background: #2d2d2d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>🎬 CineCollection</h1>
+        </div>
+        <nav>
+            <button onclick="mostrarSecao('filmes')">📽️ Filmes</button>
+            <button onclick="mostrarSecao('graficos')">📊 Gráficos</button>
+            <button onclick="mostrarSecao('mapa')">🗺️ Mapa</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Seção Filmes -->
+        <section id="secao-filmes" class="secao ativa">
+            <div class="controles">
+                <button class="btn-primary" onclick="abrirModalAdicionar()">➕ Adicionar Filme</button>
+                <input type="text" id="busca" placeholder="🔍 Buscar filmes..." onkeyup="filtrarFilmes()">
+            </div>
+            
+            <div class="filmes-grid" id="grid-filmes">
+                <!-- Filmes carregados via JavaScript -->
+            </div>
+        </section>
+
+        <!-- Seção Gráficos -->
+        <section id="secao-graficos" class="secao">
+            <h2>📊 Análise Estatística</h2>
+            <div class="graficos-container">
+                <div class="grafico-card">
+                    <h3>🎭 Distribuição por Gênero</h3>
+                    <canvas id="graficoPizza"></canvas>
+                </div>
+                <div class="grafico-card">
+                    <h3>⭐ Avaliação Média por Gênero</h3>
+                    <canvas id="graficoBarras"></canvas>
+                </div>
+                <div class="grafico-card">
+                    <h3>📅 Avaliação Média por Ano</h3>
+                    <canvas id="graficoAnos"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Mapa -->
+        <section id="secao-mapa" class="secao">
+            <h2>🗺️ Locais de Filmagem</h2>
+            <div id="mapa"></div>
+            <div class="mapa-legenda">
+                <p>🌍 Visualize onde seus filmes foram produzidos</p>
+                <p><small>📍 Marcadores vermelhos mostram os locais dos filmes</small></p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal para Adicionar/Editar Filme -->
+    <div id="modal-filme" class="modal">
+        <div class="modal-conteudo">
+            <span class="fechar" onclick="fecharModal()">&times;</span>
+            <h2 id="modal-titulo">🎬 Adicionar Filme</h2>
+            <form id="form-filme">
+                <input type="hidden" id="filme-id">
+                
+                <div class="form-grupo">
+                    <input type="text" id="titulo" placeholder="Título do filme" required>
+                </div>
+                
+                <div class="form-grupo">
+                    <textarea id="sinopse" placeholder="Sinopse" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-linha">
+                    <div class="form-grupo">
+                        <select id="genero" required>
+                            <option value="">Selecione o gênero</option>
+                            <option value="Ação">💥 Ação</option>
+                            <option value="Comédia">😂 Comédia</option>
+                            <option value="Drama">🎭 Drama</option>
+                            <option value="Ficção Científica">🚀 Ficção Científica</option>
+                            <option value="Terror">👻 Terror</option>
+                            <option value="Romance">💖 Romance</option>
+                            <option value="Animação">🐰 Animação</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-grupo">
+                        <input type="number" id="ano" placeholder="Ano" min="1900" max="2030" required>
+                    </div>
+                </div>
+                
+                <div class="form-linha">
+                    <div class="form-grupo">
+                        <input type="number" id="avaliacao" placeholder="Nota (0-10)" min="0" max="10" step="0.1" required>
+                    </div>
+                    
+                    <div class="form-grupo">
+                        <input type="text" id="diretor" placeholder="Diretor" required>
+                    </div>
+                </div>
+                
+                <div class="form-grupo">
+                    <input type="text" id="poster" placeholder="URL do poster" required>
+                </div>
+                
+                <div class="form-linha">
+                    <div class="form-grupo">
+                        <input type="text" id="pais" placeholder="País de origem" required>
+                    </div>
+                    
+                    <div class="form-grupo">
+                        <input type="text" id="cidade" placeholder="Cidade de filmagem" required>
+                    </div>
+                </div>
+                
+                <div class="form-grupo">
+                    <input type="text" id="coordenadas" placeholder="Coordenadas (lat,lng)" required>
+                    <small>Exemplo: -23.5505,-46.6333 (São Paulo) - <a href="https://www.latlong.net/" target="_blank">Obter coordenadas</a></small>
+                </div>
+                
+                <div class="modal-acoes">
+                    <button type="button" class="btn-secundario" onclick="fecharModal()">Cancelar</button>
+                    <button type="submit" class="btn-primario">Salvar Filme</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes -->
+    <div id="modal-detalhes" class="modal">
+        <div class="modal-conteudo grande">
+            <span class="fechar" onclick="fecharDetalhes()">&times;</span>
+            <div id="detalhes-conteudo">
+                <!-- Conteúdo dos detalhes -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>🎬 CineCollection - Sistema de Gerenciamento de Filmes</p>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
